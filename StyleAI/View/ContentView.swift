@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct ContentView: View {
+    
     @State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
     @State var selectedItems: [PhotosPickerItem] = []
