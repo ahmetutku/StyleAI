@@ -13,18 +13,18 @@ struct IntroScreen: View {
     
     var body: some View {
         VStack {
-            Text("Welcome to My App")
+            Text("Welcome to StyleAI")
                 .font(.largeTitle)
                 .padding()
             
-            Text("An amazing app to make your life easier.")
+            Text("StyleAI helps you dress better by learning your preferences and using ML and the information you provide to make your outfits the best outfits for you")
                 .multilineTextAlignment(.center)
                 .padding()
             
             Button(action: {
                 showIntro = false // Change state to show the main screen
             }) {
-                Text("Start")
+                Text("Let's Get it")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.blue)
