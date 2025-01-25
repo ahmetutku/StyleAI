@@ -20,16 +20,16 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, welcome to StyleAI!")
+            Text("What Would You Like to Dress Like Today")
             
-            PhotosPicker("Select avatar", selection: $avatarItem, matching: .images)
-            avatarImage?
-                .resizable()
-                .scaledToFit()
-                .frame(width: 300, height: 300)
-            
+//            PhotosPicker("Select avatar", selection: $avatarItem, matching: .images)
+//            avatarImage?
+//                .resizable()
+//                .scaledToFit()
+//                .frame(width: 300, height: 300)
+
             PhotosPicker(selection: $selectedItems, matching: .images) {
-                Text("Select Multiple Photos")
+                Text("Select Today's Fit Inspo")
             }
             .onChange(of: selectedItems) { selectedItems in
                 images = []
