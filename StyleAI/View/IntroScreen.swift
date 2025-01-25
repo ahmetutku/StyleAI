@@ -24,7 +24,7 @@ struct IntroScreen: View {
             Button(action: {
                 showIntro = false // Change state to show the main screen
             }) {
-                Text("Let's Get it")
+                Text("Let's Get It")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color.blue)
