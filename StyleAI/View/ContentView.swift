@@ -17,7 +17,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: "globe")
+            Image(systemName: "lock.circle")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("What Would You Like to Dress Like Today")
@@ -31,7 +31,7 @@ struct ContentView: View {
             PhotosPicker(selection: $selectedItems, matching: .images) {
                 Text("Select Today's Fit Inspo")
             }
-            .onChange(of: selectedItems) { selectedItems in
+            .onChange(of: selectedItems) { oldItems, selectedItems in
                 images = []
                 for item in selectedItems {
                     item.loadTransferable(type: Data.self) { result in
@@ -51,6 +51,12 @@ struct ContentView: View {
                 }
             }
             
+            PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
+                avatarImage?
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 300, height: 300)
+            
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(images, id: \.self) { image in
@@ -64,7 +70,7 @@ struct ContentView: View {
             }
         }
         .padding()
-        .onChange(of: avatarItem) { _ in
+        .onChange(of: avatarItem) { oldItem, avatarItem in
             Task {
                 if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
                     avatarImage = loaded
