@@ -19,8 +19,9 @@ struct ContentView: View {
         VStack(spacing: 20) {
             Image(systemName: "lock.circle")
                 .imageScale(.large)
-                .foregroundStyle(.tint)
+                .foregroundColor(Color("subtitle_color"))
             Text("What Would You Like to Dress Like Today")
+                .foregroundColor(.accentColor)
             
 //            PhotosPicker("Select avatar", selection: $avatarItem, matching: .images)
 //            avatarImage?
@@ -30,7 +31,7 @@ struct ContentView: View {
 
             PhotosPicker(selection: $selectedItems, matching: .images) {
                 Text("Select Today's Fit Inspo")
-            }
+            }.foregroundColor(Color("subtitle_color"))
             .onChange(of: selectedItems) { oldItems, selectedItems in
                 images = []
                 for item in selectedItems {
@@ -52,6 +53,7 @@ struct ContentView: View {
             }
             
             PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
+                .foregroundColor(Color("subtitle_color"))
                 avatarImage?
                         .resizable()
                         .scaledToFit()
