@@ -14,10 +14,11 @@ struct RootView: View {
     var body: some View {
         ZStack {
             Color("background_color").ignoresSafeArea()
+            
             if showIntro {
-                IntroScreen(showIntro: $showIntro) // Show the intro screen first
+                IntroScreen(showIntro: $showIntro)
             } else {
-                ContentView() // Show the main screen
+                ContentView()
             }
         }
     }

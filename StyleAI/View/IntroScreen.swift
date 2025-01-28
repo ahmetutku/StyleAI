@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct IntroScreen: View {
-    @Binding var showIntro: Bool // Binding to control state from parent view
+    @Binding var showIntro: Bool
     
     var body: some View {
         VStack {
@@ -24,10 +24,9 @@ struct IntroScreen: View {
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
-//                .foregroundColor(Color(.subtitle))
             
             Button(action: {
-                showIntro = false // Change state to show the main screen
+                showIntro = false
             }) {
                 Text("Let's Get It")
                     .padding()
@@ -39,6 +38,8 @@ struct IntroScreen: View {
                     .cornerRadius(10)
             }
             .padding()
+            .foregroundColor(.accentColor)
+
         }
         .padding()
     }
