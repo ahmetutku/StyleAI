@@ -21,16 +21,11 @@ struct ContentView: View {
                 .imageScale(.large)
                 .fontWeight(.bold)
                 .foregroundColor(Color("subtitle_color"))
+            
             Text("What Would You Like to Dress Like Today")
                 .foregroundColor(.accentColor)
                 .fontWeight(.bold)
             
-//            PhotosPicker("Select avatar", selection: $avatarItem, matching: .images)
-//            avatarImage?
-//                .resizable()
-//                .scaledToFit()
-//                .frame(width: 300, height: 300)
-
             PhotosPicker(selection: $selectedItems, matching: .images) {
                 Text("Select Today's Fit Inspo")
             }.foregroundColor(Color("subtitle_color"))
@@ -53,6 +48,7 @@ struct ContentView: View {
                         }
                     }
                 }
+        
             }
             
             PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
@@ -74,8 +70,11 @@ struct ContentView: View {
                     }
                 }
             }
+
         }
         .padding()
+        .background(Color("background_color").ignoresSafeArea())
+        
         .onChange(of: avatarItem) { oldItem, avatarItem in
             Task {
                 if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
