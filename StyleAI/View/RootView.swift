@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var showIntro = true // State variable to toggle between screens
+    @State private var showIntro = true 
 
     var body: some View {
         ZStack {
