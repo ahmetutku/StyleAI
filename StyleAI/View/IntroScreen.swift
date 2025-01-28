@@ -33,7 +33,7 @@ struct IntroScreen: View {
                     .font(.title2)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .background(Color(.accent))
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
