@@ -15,80 +15,115 @@ struct ContentView: View {
     @State private var isMenuOpen: Bool = false
     @State var selectedItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
+    @State private var menuPosition: CGPoint = .zero
+
     
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "lock.circle")
-                .imageScale(.large)
-                .fontWeight(.bold)
-                .foregroundColor(Color("subtitle_color"))
+        NavigationView{
             
-            Text("What Would You Like to Dress Like Today")
-                .foregroundColor(.accentColor)
-                .fontWeight(.bold)
-            
-            PhotosPicker(selection: $selectedItems, matching: .images) {
-                Text("Select Today's Fit Inspo")
-            }.foregroundColor(Color("subtitle_color"))
-                .fontWeight(.bold)
-            .onChange(of: selectedItems) { oldItems, selectedItems in
-                images = []
-                for item in selectedItems {
-                    item.loadTransferable(type: Data.self) { result in
-                        switch result {
-                        case .success(let imageData):
-                            if let imageData, let uiImage = UIImage(data: imageData) {
-                                DispatchQueue.main.async {
-                                    self.images.append(uiImage)
-                                }
-                            } else {
-                                print("No supported content type found.")
-                            }
-                        case .failure(let error):
-                            print(error)
-                        }
-                    }
+            ZStack{
+                Color("background_color").ignoresSafeArea()
+
+                if isMenuOpen {
+                    DropdownMenuView(
+                        isMenuOpen: $isMenuOpen
+                    ).padding(.top, -60.0)
                 }
-        
-            }
-            
-            PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
-                .foregroundColor(Color("subtitle_color"))
-                .fontWeight(.bold)
-                avatarImage?
+                
+                VStack(spacing: 30) {
+                    Image(systemName: "lock.circle")
+                        .imageScale(.large)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("subtitle_color"))
+                    
+                    Text("What Would You Like to Dress Like Today")
+                        .foregroundColor(.accentColor)
+                        .fontWeight(.bold)
+                    
+                    PhotosPicker(selection: $selectedItems, matching: .images) {
+                        Text("Select Today's Fit Inspo")
+                    }.foregroundColor(Color("subtitle_color"))
+                        .fontWeight(.bold)
+                        .onChange(of: selectedItems) { oldItems, selectedItems in
+                            images = []
+                            for item in selectedItems {
+                                item.loadTransferable(type: Data.self) { result in
+                                    switch result {
+                                    case .success(let imageData):
+                                        if let imageData, let uiImage = UIImage(data: imageData) {
+                                            DispatchQueue.main.async {
+                                                self.images.append(uiImage)
+                                            }
+                                        } else {
+                                            print("No supported content type found.")
+                                        }
+                                    case .failure(let error):
+                                        print(error)
+                                    }
+                                }
+                            }
+                            
+                        }
+                    
+                    PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
+                        .foregroundColor(Color("subtitle_color"))
+                        .fontWeight(.bold)
+                    avatarImage?
                         .resizable()
                         .scaledToFit()
                         .frame(width: 300, height: 300)
-            
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach(images, id: \.self) { image in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .cornerRadius(8)
+                    
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(images, id: \.self) { image in
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100, height: 100)
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                    
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                
+                .onChange(of: avatarItem) { oldItem, avatarItem in
+                    Task {
+                        if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
+                            avatarImage = loaded
+                        } else {
+                            print("Failed")
+                        }
                     }
                 }
+                
             }
-            if isMenuOpen {
-                DropdownMenuView(
-                    isMenuOpen: $isMenuOpen
-                ).padding(.top, -60.0)
-            }
+            .background(Color("background_color").ignoresSafeArea())
+            .navigationBarItems(leading: menuButton)
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
-        .background(Color("background_color").ignoresSafeArea())
         
-        .onChange(of: avatarItem) { oldItem, avatarItem in
-            Task {
-                if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
-                    avatarImage = loaded
-                } else {
-                    print("Failed")
+
+    }
+    private var menuButton: some View {
+        GeometryReader { geometry in
+            Button(action: {
+                withAnimation {
+                    isMenuOpen.toggle()
+                    menuPosition = CGPoint(
+                        x: geometry.frame(in: .global).minX + 20,
+                        y: geometry.frame(in: .global).maxY + 10
+                    )
                 }
+            }) {
+                Image(systemName: "line.horizontal.3")
+                    .imageScale(.large)
+                    .foregroundColor(.accentColor)
             }
         }
+        .frame(width: 44, height: 44)
     }
 }
 
