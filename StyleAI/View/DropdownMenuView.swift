@@ -42,10 +42,7 @@ struct DropdownMenuView: View {
                         menuItem(icon: "magnifyingglass", title: "Search")
                     }
                     NavigationLink(destination: Text("Placeholder Destination")) {
-                        menuItem(icon: "book", title: "Books")
-                    }
-                    NavigationLink(destination: Text("Placeholder Destination")) {
-                        menuItem(icon: "star.fill", title: "Favorites")
+                        menuItem(icon: "star.fill", title: "My Closet")
                     }
                     menuItem(icon: "flame", title: "Popular")
                 }
