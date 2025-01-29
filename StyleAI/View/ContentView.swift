@@ -12,6 +12,7 @@ struct ContentView: View {
     
     @State private var avatarItem: PhotosPickerItem?
     @State private var avatarImage: Image?
+    @State private var isMenuOpen: Bool = false
     @State var selectedItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
     
@@ -70,7 +71,11 @@ struct ContentView: View {
                     }
                 }
             }
-
+            if isMenuOpen {
+                DropdownMenuView(
+                    isMenuOpen: $isMenuOpen
+                ).padding(.top, -60.0)
+            }
         }
         .padding()
         .background(Color("background_color").ignoresSafeArea())
