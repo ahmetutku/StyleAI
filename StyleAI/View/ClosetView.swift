@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct ClosetView: View {
+    @State private var showingAlert = false
+
     var body: some View {
         ZStack{
             Color("background_color")
@@ -19,6 +21,8 @@ struct ClosetView: View {
 
                 Spacer()
                 Button(action: {
+                    showingAlert = true
+
                 }) {
                     Text("Add a Piece")
                         .padding()
@@ -27,6 +31,13 @@ struct ClosetView: View {
                         .background(Color(.accent))
                         .foregroundColor(.white)
                         .cornerRadius(10)
+                }.confirmationDialog("Choose an Option", isPresented: $showingAlert, titleVisibility: .visible) {
+                    Button("Take a Picture") {
+                        print("Camera selected") 
+                    }
+                    Button("Add from Photos") {
+                        print("Gallery selected")
+                    }
                 }
                 .foregroundColor(.accentColor)
             }
