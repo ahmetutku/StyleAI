@@ -10,7 +10,29 @@ struct ClosetView: View {
     var body: some View {
         ZStack{
             Color("background_color")
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
-        }.background(Color("background_color").ignoresSafeArea())
+            Spacer()
+            Text("My Closet").font(.title2)
+                .fontWeight(.bold).foregroundColor(.accentColor)
+            Spacer()
+            Button(action: {
+            }) {
+                Text("Add a Piece")
+                    .padding()
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.accent))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding(.top, 100.0)
+            .foregroundColor(.accentColor)        }
+        .background(Color("background_color").ignoresSafeArea())
+    }
+}
+
+struct ClosetView_Previews: PreviewProvider {
+    static var previews: some View {
+        ClosetView()
     }
 }
