@@ -10,9 +10,14 @@ struct ClosetView: View {
     var body: some View {
         ZStack{
             Color("background_color")
-            VStack{
-                Text("My Closet").font(.title2)
-                    .fontWeight(.bold).foregroundColor(.accentColor)
+            VStack(spacing: 20){
+                Text("My Closet")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                    .padding(.top)
+                                    .foregroundColor(.accentColor)
+
+                Spacer()
                 Button(action: {
                 }) {
                     Text("Add a Piece")
