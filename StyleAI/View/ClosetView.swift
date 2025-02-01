@@ -9,9 +9,10 @@ import PhotosUI
 
 
 struct ClosetView: View {
+    @State private var showCamera = false
     @State private var showPhotoPicker = false
     @State private var showingAlert = false
-    @State private var avatarImage: Image?
+    @State private var avatarImage: UIImage?
     @State private var avatarItem: PhotosPickerItem?
 
     var body: some View {
@@ -39,19 +40,22 @@ struct ClosetView: View {
                         .cornerRadius(10)
                 }.confirmationDialog("Choose an Option", isPresented: $showingAlert, titleVisibility: .visible) {
                     Button("Take a Picture") {
-                        print("Camera selected")
+                        showCamera = true
                     }
                     Button("Choose from Library") {
                         showPhotoPicker = true
                     }
                 }
-                // PhotosPicker shown separately
+                .fullScreenCover(isPresented: $showCamera) {
+                    CameraPicker(image: $avatarImage)
+                    }
+
                 .photosPicker(isPresented: $showPhotoPicker, selection: $avatarItem, matching: .images)
-                .onChange(of: avatarItem) { oldItem, newItem in
+                .onChange(of: avatarItem) { newItem in
                     Task {
-                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                        if let uiImage = UIImage(data: data) {
-                            avatarImage = Image(uiImage: uiImage)
+                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                            if let uiImage = UIImage(data: data) {
+                                avatarImage = uiImage
                             }
                         }
                     }
