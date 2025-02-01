@@ -5,9 +5,14 @@
 //  Created by Ahmet Hamamcioglu on 30.01.2025.
 //
 import SwiftUI
+import PhotosUI
+
 
 struct ClosetView: View {
+    @State private var showPhotoPicker = false
     @State private var showingAlert = false
+    @State private var avatarImage: Image?
+    @State private var avatarItem: PhotosPickerItem?
 
     var body: some View {
         ZStack{
@@ -20,6 +25,7 @@ struct ClosetView: View {
                                     .foregroundColor(.accentColor)
 
                 Spacer()
+                
                 Button(action: {
                     showingAlert = true
 
@@ -33,13 +39,25 @@ struct ClosetView: View {
                         .cornerRadius(10)
                 }.confirmationDialog("Choose an Option", isPresented: $showingAlert, titleVisibility: .visible) {
                     Button("Take a Picture") {
-                        print("Camera selected") 
+                        print("Camera selected")
                     }
-                    Button("Add from Photos") {
-                        print("Gallery selected")
+                    Button("Choose from Library") {
+                        showPhotoPicker = true
+                    }
+                }
+                // PhotosPicker shown separately
+                .photosPicker(isPresented: $showPhotoPicker, selection: $avatarItem, matching: .images)
+                .onChange(of: avatarItem) { oldItem, newItem in
+                    Task {
+                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                        if let uiImage = UIImage(data: data) {
+                            avatarImage = Image(uiImage: uiImage)
+                            }
+                        }
                     }
                 }
                 .foregroundColor(.accentColor)
+                
             }
 
         }.background(Color("background_color").ignoresSafeArea())
