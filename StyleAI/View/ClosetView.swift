@@ -60,8 +60,6 @@ struct ClosetView: View {
                         }
                     }
                 }
-                .foregroundColor(.accentColor)
-                
             }
 
         }.background(Color("background_color").ignoresSafeArea())
