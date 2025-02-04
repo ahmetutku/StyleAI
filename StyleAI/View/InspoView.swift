@@ -8,10 +8,30 @@
 import SwiftUI
 
 struct InspoView: View {
+    let outfitImages = ["outfit1", "outfit2", "outfit3", "outfit4", "outfit5"]
+
     var body: some View {
         ZStack {
             Color("background_color").ignoresSafeArea()
-            
+            VStack{
+                Text("Here's Whats Trending")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.top)
+                    .foregroundColor(.accentColor)
+                ScrollView{
+                    VStack{
+                        ForEach(outfitImages, id: \.self) { imageName in
+                                                  Image(imageName) // Directly loads from Assets
+                                                      .resizable()
+                                                      .scaledToFit()
+                                                      .frame(width: 150, height: 200)
+                                                      .cornerRadius(10)
+                                                      .shadow(radius: 5)
+                                              }
+                    }
+                }
+            }
 
         }.background(Color("background_color").ignoresSafeArea())
 
