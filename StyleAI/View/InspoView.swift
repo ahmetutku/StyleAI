@@ -13,7 +13,13 @@ struct InspoView: View {
             Color("background_color").ignoresSafeArea()
             
 
-        }
+        }.background(Color("background_color").ignoresSafeArea())
 
+    }
+}
+
+struct InspoView_Previews: PreviewProvider {
+    static var previews: some View {
+        InspoView()
     }
 }

@@ -38,7 +38,7 @@ struct DropdownMenuView: View {
                 .padding(.top)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    NavigationLink(destination: Text("Placeholder Destination")) {
+                    NavigationLink(destination: InspoView()) {
                         menuItem(icon: "magnifyingglass", title: "Inspo")
                     }
                     NavigationLink(destination: ClosetView()) {
