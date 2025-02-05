@@ -9,37 +9,48 @@ import SwiftUI
 
 struct InspoView: View {
     var numberOfOutfits: Int = 11
-    let outfitImages: [String]
-
+    let outfitImages: [OutfitImage]
+    
+    @State private var selectedImage: OutfitImage? 
+    
     init() {
-        self.outfitImages = (1...numberOfOutfits).map { "outfit\($0)" }
-        }
+        self.outfitImages = (1...numberOfOutfits).map { OutfitImage(name: "outfit\($0)") }
+    }
 
     var body: some View {
         ZStack {
             Color("background_color").ignoresSafeArea()
-            VStack{
-                Text("Here's Whats Trending")
+            
+            VStack {
+                Text("Here's What's Trending")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.top)
                     .foregroundColor(.accentColor)
-                ScrollView{
-                    VStack{
-                        ForEach(outfitImages, id: \.self) { imageName in
-                                                  Image(imageName) // Directly loads from Assets
-                                                      .resizable()
-                                                      .scaledToFit()
-                                                      .frame(width: 150, height: 200)
-                                                      .cornerRadius(10)
-                                                      .shadow(radius: 5)
-                                              }
+                
+                ScrollView {
+                    let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)] // Adaptive grid layout
+                    
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(outfitImages) { outfit in
+                            Image(outfit.name)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(height: CGFloat.random(in: 150...300)) // Randomized height
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .shadow(radius: 5)
+                                .onTapGesture {
+                                    selectedImage = outfit // Set selected image for full-screen view
+                                }
+                        }
                     }
+                    .padding()
                 }
             }
-
-        }.background(Color("background_color").ignoresSafeArea())
-
+        }
+        .fullScreenCover(item: $selectedImage) { outfit in
+            FullScreenImageView(imageName: outfit.name)
+        }
     }
 }
 
