@@ -19,10 +19,10 @@ struct ClosetView: View {
             Color("background_color")
             VStack(spacing: 20) {
                 Text("My Closet")
-                                    .font(.largeTitle)
-                                    .fontWeight(.bold)
-                                    .padding(.top)
-                                    .foregroundColor(.accentColor)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top)
+                    .foregroundColor(.accentColor)
 
                 Spacer()
                 
