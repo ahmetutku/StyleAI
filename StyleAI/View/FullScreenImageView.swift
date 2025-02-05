@@ -12,13 +12,13 @@ struct FullScreenImageView: View {
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color("background_color")
             Image(imageName)
                 .resizable()
                 .scaledToFit()
                 .onTapGesture {
                     dismiss() // Close full-screen image on tap
                 }
-        }
+        }.background(Color("background_color").ignoresSafeArea())
     }
 }
