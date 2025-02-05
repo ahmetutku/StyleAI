@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct InspoView: View {
-    let outfitImages = ["outfit1", "outfit2", "outfit3", "outfit4", "outfit5"]
+    var numberOfOutfits: Int = 11
+    let outfitImages: [String]
+
+    init() {
+        self.outfitImages = (1...numberOfOutfits).map { "outfit\($0)" }
+        }
 
     var body: some View {
         ZStack {
