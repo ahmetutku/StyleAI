@@ -11,7 +11,7 @@ struct InspoView: View {
     var numberOfOutfits: Int = 11
     let outfitImages: [OutfitImage]
     
-    @State private var selectedImage: OutfitImage? 
+    @State private var selectedImage: OutfitImage?
     
     init() {
         self.outfitImages = (1...numberOfOutfits).map { OutfitImage(name: "outfit\($0)") }
@@ -36,11 +36,11 @@ struct InspoView: View {
                             Image(outfit.name)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(height: CGFloat.random(in: 150...300)) // Randomized height
+                                .frame(height: CGFloat.random(in: 200...250))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .shadow(radius: 5)
+                                .shadow(radius: 10)
                                 .onTapGesture {
-                                    selectedImage = outfit // Set selected image for full-screen view
+                                    selectedImage = outfit
                                 }
                         }
                     }
