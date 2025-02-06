@@ -13,10 +13,13 @@ struct ClosetView: View {
     @State private var showingAlert = false
     @State private var avatarImage: UIImage?
     @State private var avatarItem: PhotosPickerItem?
+    @State private var isProcessing = false  // To show loading state
 
     var body: some View {
         ZStack {
             Color("background_color")
+                .ignoresSafeArea()
+            
             VStack(spacing: 20) {
                 Text("My Closet")
                     .font(.largeTitle)
@@ -33,6 +36,24 @@ struct ClosetView: View {
                         .frame(height: 200)
                         .cornerRadius(10)
                         .shadow(radius: 5)
+                    
+                    // "Remove Background" Button
+                    Button(action: {
+                        removeBackground()
+                    }) {
+                        if isProcessing {
+                            ProgressView()
+                        } else {
+                            Text("Remove Background")
+                                .padding()
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .disabled(isProcessing) // Disable when processing
                 }
 
                 Button(action: {
@@ -45,7 +66,8 @@ struct ClosetView: View {
                         .background(Color.accentColor)
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                }.confirmationDialog("Choose an Option", isPresented: $showingAlert, titleVisibility: .visible) {
+                }
+                .confirmationDialog("Choose an Option", isPresented: $showingAlert, titleVisibility: .visible) {
                     Button("Take a Picture") {
                         showCamera = true
                     }
@@ -61,19 +83,24 @@ struct ClosetView: View {
                     Task {
                         if let data = try? await newItem?.loadTransferable(type: Data.self),
                            let uiImage = UIImage(data: data) {
-                            removeBackground(from: uiImage)
+                            avatarImage = uiImage // Set the original image first
                         }
                     }
                 }
             }
         }
-        .background(Color("background_color").ignoresSafeArea())
     }
     
-    private func removeBackground(from image: UIImage) {
+    private func removeBackground() {
+        guard let image = avatarImage else { return }
+        isProcessing = true // Show loading state
+
         BackgroundRemover.shared.removeBackground(from: image) { processedImage in
-            if let result = processedImage {
-                avatarImage = result
+            DispatchQueue.main.async {
+                if let result = processedImage {
+                    avatarImage = result
+                }
+                isProcessing = false
             }
         }
     }
@@ -84,3 +111,4 @@ struct ClosetView_Previews: PreviewProvider {
         ClosetView()
     }
 }
+
