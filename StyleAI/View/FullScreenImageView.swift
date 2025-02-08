@@ -17,7 +17,7 @@ struct FullScreenImageView: View {
                 .resizable()
                 .scaledToFit()
                 .onTapGesture {
-                    dismiss() // Close full-screen image on tap
+                    dismiss()
                 }
         }.background(Color("background_color").ignoresSafeArea())
     }

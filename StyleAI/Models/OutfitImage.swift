@@ -7,6 +7,6 @@
 import SwiftUI
 
 struct OutfitImage: Identifiable {
-    let id = UUID() // Unique ID for each image
+    let id = UUID()
     let name: String
 }

@@ -29,7 +29,7 @@ struct InspoView: View {
                     .foregroundColor(.accentColor)
                 
                 ScrollView {
-                    let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)] // Adaptive grid layout
+                    let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
                     
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(outfitImages) { outfit in

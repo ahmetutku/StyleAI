@@ -13,8 +13,8 @@ struct ClosetView: View {
     @State private var showingAlert = false
     @State private var avatarImage: UIImage?
     @State private var avatarItem: PhotosPickerItem?
-    @State private var isProcessing = false  // To show loading state
-
+    @State private var isProcessing = false
+    
     var body: some View {
         ZStack {
             Color("background_color")
@@ -37,7 +37,7 @@ struct ClosetView: View {
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     
-                    // "Remove Background" Button
+                    
                     Button(action: {
                         removeBackground()
                     }) {
@@ -83,7 +83,7 @@ struct ClosetView: View {
                     Task {
                         if let data = try? await newItem?.loadTransferable(type: Data.self),
                            let uiImage = UIImage(data: data) {
-                            avatarImage = uiImage // Set the original image first
+                            avatarImage = uiImage
                         }
                     }
                 }
@@ -93,7 +93,7 @@ struct ClosetView: View {
     
     private func removeBackground() {
         guard let image = avatarImage else { return }
-        isProcessing = true // Show loading state
+        isProcessing = true 
 
         BackgroundRemover.shared.removeBackground(from: image) { processedImage in
             DispatchQueue.main.async {
