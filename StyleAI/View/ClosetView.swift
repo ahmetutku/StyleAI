@@ -13,6 +13,8 @@ struct ClosetView: View {
     @State private var showingAlert = false
     @State private var avatarImage: UIImage?
     @State private var avatarItem: PhotosPickerItem?
+    @State var selectedItems: [PhotosPickerItem] = []
+    @State var images: [UIImage] = []
     @State private var isProcessing = false
     
     var body: some View {
@@ -78,14 +80,26 @@ struct ClosetView: View {
                 .fullScreenCover(isPresented: $showCamera) {
                     CameraPicker(image: $avatarImage)
                 }
-                .photosPicker(isPresented: $showPhotoPicker, selection: $avatarItem, matching: .images)
-                .onChange(of: avatarItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self),
-                           let uiImage = UIImage(data: data) {
-                            avatarImage = uiImage
+                .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItems, matching: .images)
+                .onChange(of: selectedItems) { oldItems, selectedItems in
+                    images = []
+                    for item in selectedItems {
+                        item.loadTransferable(type: Data.self) { result in
+                            switch result {
+                            case .success(let imageData):
+                                if let imageData, let uiImage = UIImage(data: imageData) {
+                                    DispatchQueue.main.async {
+                                        self.images.append(uiImage)
+                                    }
+                                } else {
+                                    print("No supported content type found.")
+                                }
+                            case .failure(let error):
+                                print(error)
+                            }
                         }
                     }
+                    
                 }
             }
         }
