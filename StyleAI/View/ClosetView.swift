@@ -30,7 +30,18 @@ struct ClosetView: View {
                     .foregroundColor(.accentColor)
 
                 Spacer()
-                
+                ScrollView(.horizontal) {
+                    VStack {
+                        ForEach(images, id: \.self) { image in
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .cornerRadius(8)
+                        }
+                    }
+                }
+                Spacer()
                 if let avatarImage = avatarImage {
                     Image(uiImage: avatarImage)
                         .resizable()
