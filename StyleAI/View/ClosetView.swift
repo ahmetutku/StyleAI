@@ -16,6 +16,8 @@ struct ClosetView: View {
     @State var selectedItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
     @State private var isProcessing = false
+    @State private var selectedImage: UIImage?
+
     
     var body: some View {
         ZStack {
@@ -41,6 +43,9 @@ struct ClosetView: View {
                                 .frame(height: CGFloat.random(in: 90...100))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .shadow(radius: 10)
+                                .onTapGesture {
+                                    selectedImage = image
+                                }
                         }
                     }
                     .padding()
