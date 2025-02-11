@@ -35,10 +35,10 @@ struct ClosetView: View {
                     
                     LazyVGrid(columns: columns, spacing: 10) {
                         ForEach(Array(images.enumerated()), id: \.offset) { index, image in
-                            Image(uiImage: image) // Corrected: Use `uiImage:`
+                            Image(uiImage: image)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(height: CGFloat.random(in: 200...250))
+                                .frame(height: CGFloat.random(in: 90...100))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .shadow(radius: 10)
                         }
