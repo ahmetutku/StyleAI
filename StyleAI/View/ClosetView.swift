@@ -30,16 +30,20 @@ struct ClosetView: View {
                     .foregroundColor(.accentColor)
 
                 Spacer()
-                ScrollView(.horizontal) {
-                    VStack {
-                        ForEach(images, id: \.self) { image in
-                            Image(uiImage: image)
+                ScrollView {
+                    let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
+                    
+                    LazyVGrid(columns: columns, spacing: 10) {
+                        ForEach(Array(images.enumerated()), id: \.offset) { index, image in
+                            Image(uiImage: image) // Corrected: Use `uiImage:`
                                 .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .cornerRadius(8)
+                                .scaledToFill()
+                                .frame(height: CGFloat.random(in: 200...250))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .shadow(radius: 10)
                         }
                     }
+                    .padding()
                 }
                 Spacer()
                 if let avatarImage = avatarImage {
