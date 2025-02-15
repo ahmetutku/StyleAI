@@ -5,14 +5,6 @@
 //  Created by Ahmet Hamamcioglu on 29.01.2025.
 //
 
-
-//
-//  DropdownMenuView.swift
-//  pnc
-//
-//  Created by Ahmet Hamamcioglu on 9.12.2024.
-//
-
 import SwiftUI
 struct DropdownMenuView: View {
     @Binding var isMenuOpen: Bool
