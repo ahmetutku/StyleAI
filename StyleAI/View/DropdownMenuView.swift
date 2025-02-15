@@ -17,7 +17,6 @@ import SwiftUI
 struct DropdownMenuView: View {
     @Binding var isMenuOpen: Bool
 
-
     var body: some View {
         ZStack {
             Color.black.opacity(0.25)
