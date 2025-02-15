@@ -11,8 +11,7 @@ struct ClosetView: View {
     @State private var showCamera = false
     @State private var showPhotoPicker = false
     @State private var showingAlert = false
-    @State private var avatarImage: UIImage?
-    @State private var avatarItem: PhotosPickerItem?
+    @State private var closetImage: UIImage?
     @State var selectedItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
     @State private var isProcessing = false
@@ -51,8 +50,8 @@ struct ClosetView: View {
                     .padding()
                 }
                 Spacer()
-                if let avatarImage = avatarImage {
-                    Image(uiImage: avatarImage)
+                if let closetImage = closetImage {
+                    Image(uiImage: closetImage)
                         .resizable()
                         .scaledToFit()
                         .frame(height: 200)
@@ -98,7 +97,7 @@ struct ClosetView: View {
                     }
                 }
                 .fullScreenCover(isPresented: $showCamera) {
-                    CameraPicker(image: $avatarImage)
+                    CameraPicker(image: $closetImage)
                 }
                 .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItems, matching: .images)
                 .onChange(of: selectedItems) { oldItems, selectedItems in
@@ -126,13 +125,13 @@ struct ClosetView: View {
     }
     
     private func removeBackground() {
-        guard let image = avatarImage else { return }
+        guard let image = closetImage else { return }
         isProcessing = true 
 
         BackgroundRemover.shared.removeBackground(from: image) { processedImage in
             DispatchQueue.main.async {
                 if let result = processedImage {
-                    avatarImage = result
+                    closetImage = result
                 }
                 isProcessing = false
             }
