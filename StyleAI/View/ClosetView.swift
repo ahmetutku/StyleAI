@@ -12,7 +12,7 @@ struct ClosetView: View {
     @State private var showPhotoPicker = false
     @State private var showingAlert = false
     @State private var closetImage: UIImage?
-    @State var selectedItems: [PhotosPickerItem] = []
+    @State var closetItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
     @State private var isProcessing = false
     @State private var selectedImage: UIImage?
@@ -99,10 +99,10 @@ struct ClosetView: View {
                 .fullScreenCover(isPresented: $showCamera) {
                     CameraPicker(image: $closetImage)
                 }
-                .photosPicker(isPresented: $showPhotoPicker, selection: $selectedItems, matching: .images)
-                .onChange(of: selectedItems) { oldItems, selectedItems in
+                .photosPicker(isPresented: $showPhotoPicker, selection: $closetItems, matching: .images)
+                .onChange(of: closetItems) { oldItems, closetItems in
                     images = []
-                    for item in selectedItems {
+                    for item in closetItems {
                         item.loadTransferable(type: Data.self) { result in
                             switch result {
                             case .success(let imageData):
