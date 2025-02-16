@@ -74,7 +74,7 @@ struct ClosetView: View {
                                 .cornerRadius(10)
                         }
                     }
-                    .disabled(isProcessing) // Disable when processing
+                    .disabled(isProcessing)
                 }
 
                 Button(action: {
