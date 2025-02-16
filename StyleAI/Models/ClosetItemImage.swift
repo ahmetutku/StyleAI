@@ -9,7 +9,11 @@
 import SwiftUI
 
 struct ClosetItemImage: Identifiable {
-    let id = UUID()
-    let name: String
+    var id = UUID()
     let closetImage: UIImage
+    
+    init(id:UUID, closetImage: UIImage){
+        self.id = id
+        self.closetImage = closetImage
+    }
 }
