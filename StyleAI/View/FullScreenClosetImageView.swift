@@ -9,14 +9,13 @@
 import SwiftUI
 
 struct FullScreenClosetImageView: View {
-    let imageName: String
+    let image: UIImage
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
         ZStack {
             Color("background_color")
-            Image(imageName)
-                .resizable()
+            Image(uiImage: image).resizable()
                 .scaledToFit()
                 .onTapGesture {
                     dismiss()
