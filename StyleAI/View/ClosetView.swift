@@ -15,7 +15,7 @@ struct ClosetView: View {
     @State var closetItems: [PhotosPickerItem] = []
     @State var images: [UIImage] = []
     @State private var isProcessing = false
-    @State private var selectedImage: UIImage?
+    @State private var selectedImage: ClosetImage?
 
     
     var body: some View {
@@ -43,7 +43,7 @@ struct ClosetView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .shadow(radius: 10)
                                 .onTapGesture {
-                                    selectedImage = image
+                                    selectedImage?.image = image
                                 }
                         }
                     }
@@ -121,6 +121,8 @@ struct ClosetView: View {
                     
                 }
             }
+        }.fullScreenCover(item: $selectedImage) {_ in
+            FullScreenClosetImageView(image: selectedImage!.image)
         }
     }
     
