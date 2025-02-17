@@ -11,6 +11,10 @@ import SwiftUI
 struct FullScreenClosetImageView: View {
     let image: UIImage
     @Environment(\.dismiss) var dismiss
+    @State private var isProcessing = false
+//    let removeBackground: (UIImage) -> Void
+
+    
 
     var body: some View {
         ZStack {
@@ -20,6 +24,24 @@ struct FullScreenClosetImageView: View {
                 .onTapGesture {
                     dismiss()
                 }
+            
+            Button(action: {
+//                removeBackground(image)
+
+            }) {
+                if isProcessing {
+                    ProgressView()
+                } else {
+                    Text("Remove Background")
+                        .padding()
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
+            }
+            .padding()
         }.background(Color("background_color").ignoresSafeArea())
     }
 }
