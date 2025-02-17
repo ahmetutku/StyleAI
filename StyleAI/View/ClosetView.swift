@@ -13,9 +13,9 @@ struct ClosetView: View {
     @State private var showingAlert = false
     @State private var closetImage: UIImage?
     @State var closetItems: [PhotosPickerItem] = []
-    @State var images: [UIImage] = []
+    @State var images: [ClosetItemImage] = []
     @State private var isProcessing = false
-    @State private var selectedImage: ClosetImage?
+    @State private var selectedImage: ClosetItemImage?
 
     
     var body: some View {
@@ -35,15 +35,16 @@ struct ClosetView: View {
                     let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
                     
                     LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(Array(images.enumerated()), id: \.offset) { index, image in
-                            Image(uiImage: image)
+                        ForEach(images) {image in
+                            Image(uiImage: image.closetImage)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(height: CGFloat.random(in: 90...100))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                 .shadow(radius: 10)
                                 .onTapGesture {
-                                    selectedImage?.image = image
+                                    selectedImage = image
+                                    print("image tapped")
                                 }
                         }
                     }
@@ -100,26 +101,26 @@ struct ClosetView: View {
                     CameraPicker(image: $closetImage)
                 }
                 .photosPicker(isPresented: $showPhotoPicker, selection: $closetItems, matching: .images)
-                .onChange(of: closetItems) { oldItems, closetItems in
-                    images = []
-                    for item in closetItems {
-                        item.loadTransferable(type: Data.self) { result in
-                            switch result {
-                            case .success(let imageData):
-                                if let imageData, let uiImage = UIImage(data: imageData) {
-                                    DispatchQueue.main.async {
-                                        self.images.append(uiImage)
-                                    }
-                                } else {
-                                    print("No supported content type found.")
-                                }
-                            case .failure(let error):
-                                print(error)
-                            }
-                        }
-                    }
-                    
-                }
+//                .onChange(of: closetItems) {closetItems,<#arg#>  in
+//                    images = []
+//                    for item in closetItems {
+//                        item.loadTransferable(type: Data.self) { result in
+//                            switch result {
+//                            case .success(let imageData):
+//                                if let imageData, let uiImage = ClosetItemImage(data: imageData) {
+//                                    DispatchQueue.main.async {
+//                                        self.images.append(uiImage)
+//                                    }
+//                                } else {
+//                                    print("No supported content type found.")
+//                                }
+//                            case .failure(let error):
+//                                print(error)
+//                            }
+//                        }
+//                    }
+//                    
+//                }
             }
         }.fullScreenCover(item: $selectedImage) {_ in
             FullScreenClosetImageView(image: selectedImage!.image)
