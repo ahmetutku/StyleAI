@@ -44,7 +44,6 @@ struct ClosetView: View {
                                 .shadow(radius: 10)
                                 .onTapGesture {
                                     selectedImage = image
-                                    print("image tapped")
                                 }
                         }
                     }
