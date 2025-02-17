@@ -9,26 +9,24 @@
 import SwiftUI
 
 struct FullScreenClosetImageView: View {
-    let image: UIImage
+    let originalImage: UIImage
     @Environment(\.dismiss) var dismiss
+    @State private var processedImage: UIImage?
     @State private var isProcessing = false
-//    let removeBackground: (UIImage) -> Void
 
     var body: some View {
         ZStack {
-            
-            Color("background_color")
-            VStack{
-                Image(uiImage: image).resizable()
+            Color("background_color").ignoresSafeArea()
+
+            VStack {
+                Image(uiImage: processedImage ?? originalImage)
+                    .resizable()
                     .scaledToFit()
                     .onTapGesture {
                         dismiss()
                     }
-                
-                Button(action: {
-                    //removeBackground(image)
-                    
-                }) {
+
+                Button(action: removeBackground) {
                     if isProcessing {
                         ProgressView()
                     } else {
@@ -36,13 +34,25 @@ struct FullScreenClosetImageView: View {
                             .padding()
                             .font(.title2)
                             .fontWeight(.bold)
-                            .background(.accent)
+                            .background(Color.accentColor)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
                 }
                 .padding()
+                .disabled(isProcessing)
             }
-        }.background(Color("background_color").ignoresSafeArea())
+        }
+    }
+
+    private func removeBackground() {
+        isProcessing = true
+
+        BackgroundRemover.shared.removeBackground(from: originalImage) { result in
+            DispatchQueue.main.async {
+                processedImage = result ?? originalImage
+                isProcessing = false
+            }
+        }
     }
 }

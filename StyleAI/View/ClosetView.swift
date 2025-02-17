@@ -97,7 +97,7 @@ struct ClosetView: View {
                     }
                 }
                 .fullScreenCover(item: $selectedImage) { selectedImage in
-                    FullScreenClosetImageView(image: selectedImage.closetImage)
+                    FullScreenClosetImageView(originalImage: selectedImage.closetImage)
                 }
                 
                 .photosPicker(isPresented: $showPhotoPicker, selection: $closetItems, matching: .images)
