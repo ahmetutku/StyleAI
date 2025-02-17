@@ -1,12 +1,12 @@
 //
-//  FullScreenImageView.swift
+//  FullScreenInspoView.swift
 //  StyleAI
 //
 //  Created by Ahmet Hamamcioglu on 4.02.2025.
 //
 import SwiftUI
 
-struct FullScreenImageView: View {
+struct FullScreenInspoView: View {
     let imageName: String
     @Environment(\.dismiss) var dismiss
 

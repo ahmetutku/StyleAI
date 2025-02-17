@@ -49,7 +49,7 @@ struct InspoView: View {
             }
         }
         .fullScreenCover(item: $selectedImage) { outfit in
-            FullScreenImageView(imageName: outfit.name)
+            FullScreenInspoView(imageName: outfit.name)
         }
     }
 }
