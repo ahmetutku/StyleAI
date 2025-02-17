@@ -29,7 +29,7 @@ struct ClosetView: View {
                     .fontWeight(.bold)
                     .padding(.top)
                     .foregroundColor(.accentColor)
-
+                
                 Spacer()
                 ScrollView {
                     let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
@@ -77,7 +77,7 @@ struct ClosetView: View {
                     }
                     .disabled(isProcessing)
                 }
-
+                
                 Button(action: {
                     showingAlert = true
                 }) {
@@ -100,50 +100,28 @@ struct ClosetView: View {
                 .fullScreenCover(item: $selectedImage) { selectedImage in
                     FullScreenClosetImageView(image: selectedImage.closetImage)
                 }
-
+                
                 .photosPicker(isPresented: $showPhotoPicker, selection: $closetItems, matching: .images)
                 .onChange(of: closetItems) { newItems in
-                                    images = []
-                                    for item in newItems {
-                                        item.loadTransferable(type: Data.self) { result in
-                                            switch result {
-                                            case .success(let imageData):
-                                                if let imageData, let uiImage = UIImage(data: imageData) {
-                                                    DispatchQueue.main.async {
-                                                        self.images.append(ClosetItemImage(id: UUID(), closetImage: uiImage))
-                                                    }
-                                                } else {
-                                                    print("No supported content type found.")
-                                                }
-                                            case .failure(let error):
-                                                print(error)
-                                            }
-                                        }
+                    images = []
+                    for item in newItems {
+                        item.loadTransferable(type: Data.self) { result in
+                            switch result {
+                            case .success(let imageData):
+                                if let imageData, let uiImage = UIImage(data: imageData) {
+                                    DispatchQueue.main.async {
+                                        self.images.append(ClosetItemImage(id: UUID(), closetImage: uiImage))
                                     }
+                                } else {
+                                    print("No supported content type found.")
                                 }
-//                .onChange(of: closetItems) {closetItems,<#arg#>  in
-//                    images = []
-//                    for item in closetItems {
-//                        item.loadTransferable(type: Data.self) { result in
-//                            switch result {
-//                            case .success(let imageData):
-//                                if let imageData, let uiImage = ClosetItemImage(data: imageData) {
-//                                    DispatchQueue.main.async {
-//                                        self.images.append(uiImage)
-//                                    }
-//                                } else {
-//                                    print("No supported content type found.")
-//                                }
-//                            case .failure(let error):
-//                                print(error)
-//                            }
-//                        }
-//                    }
-//                    
-//                }
+                            case .failure(let error):
+                                print(error)
+                            }
+                        }
+                    }
+                }
             }
-        }.fullScreenCover(item: $selectedImage) {_ in
-            FullScreenClosetImageView(image: selectedImage!.closetImage)
         }
     }
     

@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct ClosetImageView: View {
+struct ClosetImageViewClosetImageView: View {
     let image: UIImage
     let removeBackground: (UIImage) -> Void
     @Environment(\.presentationMode) var presentationMode
