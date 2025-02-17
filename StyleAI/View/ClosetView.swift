@@ -123,7 +123,7 @@ struct ClosetView: View {
 //                }
             }
         }.fullScreenCover(item: $selectedImage) {_ in
-            FullScreenClosetImageView(image: selectedImage!.image)
+            FullScreenClosetImageView(image: selectedImage!.closetImage)
         }
     }
     
