@@ -44,61 +44,21 @@ struct ContentView: View {
                         Text("Select Today's Fit Inspo")
                     }.foregroundColor(Color("subtitle_color"))
                         .fontWeight(.bold)
-                        .onChange(of: selectedItems) { oldItems, selectedItems in
-                            images = []
-                            for item in selectedItems {
-                                item.loadTransferable(type: Data.self) { result in
-                                    switch result {
-                                    case .success(let imageData):
-                                        if let imageData, let uiImage = UIImage(data: imageData) {
-                                            DispatchQueue.main.async {
-                                                self.images.append(uiImage)
-                                            }
-                                        } else {
-                                            print("No supported content type found.")
-                                        }
-                                    case .failure(let error):
-                                        print(error)
-                                    }
-                                }
-                            }
-                            
-                        }
-                    
-                    PhotosPicker("Suprise Me", selection: $avatarItem, matching: .images)
-                        .foregroundColor(Color("subtitle_color"))
-                        .fontWeight(.bold)
-                    avatarImage?
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 300)
-                    
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(images, id: \.self) { image in
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
-                                    .cornerRadius(8)
-                            }
-                        }
+                    Button(action: {
+
+                    }) {
+                        Text("Suprise Me")
+                            .padding()
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .background(.accent)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
                     
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                
-                .onChange(of: avatarItem) { oldItem, avatarItem in
-                    Task {
-                        if let loaded = try? await avatarItem?.loadTransferable(type: Image.self) {
-                            avatarImage = loaded
-                        } else {
-                            print("Failed")
-                        }
-                    }
-                }
-                
             }
             .background(Color("background_color").ignoresSafeArea())
             .navigationBarItems(leading: menuButton)
