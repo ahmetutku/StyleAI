@@ -97,8 +97,11 @@ struct ClosetView: View {
                     }
                 }
                 .fullScreenCover(item: $selectedImage) { selectedImage in
-                    FullScreenClosetImageView(originalImage: selectedImage.closetImage)
+                    FullScreenClosetImageView(originalImage: selectedImage.closetImage) { updatedImage in
+                        updateClosetItem(with: selectedImage.id, newImage: updatedImage)
+                    }
                 }
+
                 
                 .photosPicker(isPresented: $showPhotoPicker, selection: $closetItems, matching: .images)
                 .onChange(of: closetItems) { newItems in
@@ -123,6 +126,13 @@ struct ClosetView: View {
             }
         }
     }
+    
+    private func updateClosetItem(with id: UUID, newImage: UIImage) {
+        if let index = images.firstIndex(where: { $0.id == id }) {
+            images[index] = ClosetItemImage(id: id, closetImage: newImage)
+        }
+    }
+
     
     private func removeBackground() {
         guard let image = closetImage else { return }

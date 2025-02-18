@@ -10,6 +10,7 @@ import SwiftUI
 
 struct FullScreenClosetImageView: View {
     let originalImage: UIImage
+    let onUpdate: (UIImage) -> Void
     @Environment(\.dismiss) var dismiss
     @State private var processedImage: UIImage?
     @State private var isProcessing = false
@@ -50,7 +51,10 @@ struct FullScreenClosetImageView: View {
 
         BackgroundRemover.shared.removeBackground(from: originalImage) { result in
             DispatchQueue.main.async {
-                processedImage = result ?? originalImage
+                if let resultImage = result {
+                    processedImage = resultImage
+                    onUpdate(resultImage)
+                }
                 isProcessing = false
             }
         }
