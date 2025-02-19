@@ -8,12 +8,16 @@
 
 import SwiftUI
 
-struct ClosetItemImage: Identifiable {
+struct ClosetItemImage: Identifiable, Codable {
     var id = UUID()
-    let closetImage: UIImage
+    let filename: String
     
-    init(id:UUID, closetImage: UIImage){
+    var closetImage: UIImage? {
+           return ImageStorage.loadImage(named: filename)
+       }
+    
+    init(id: UUID = UUID(), filename: String){
         self.id = id
-        self.closetImage = closetImage
+        self.filename = filename
     }
 }
