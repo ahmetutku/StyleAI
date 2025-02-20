@@ -97,10 +97,14 @@ struct ClosetView: View {
                     if let imageData, let uiImage = UIImage(data: imageData) {
                         let filename = "\(UUID().uuidString).png"
                         ImageStorage.saveImage(uiImage, named: filename)
-                        
-                        DispatchQueue.main.async {
-                            self.images.append(ClosetItemImage(id: UUID(), filename: filename))
-                            saveClosetItems()
+
+                        ClothingClassifier.shared.classifyImage(uiImage) { category in
+                            DispatchQueue.main.async {
+                                let closetItem = ClosetItemImage(id: UUID(), filename: filename, category: category ?? "Unknown")
+                                print(category ?? "Unknown")
+                                self.images.append(closetItem)
+                                saveClosetItems()
+                            }
                         }
                     }
                 case .failure(let error):
@@ -109,6 +113,7 @@ struct ClosetView: View {
             }
         }
     }
+
 
     // MARK: - Update Image after Background Removal
     private func updateClosetItem(with id: UUID, newImage: UIImage) {
