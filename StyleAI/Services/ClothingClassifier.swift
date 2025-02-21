@@ -26,19 +26,37 @@ class ClothingClassifier {
                 return
             }
 
-            let clothingCategories = ["t-shirt", "pants", "jeans", "shorts", "jacket", "sweater", "dress", "coat", "shoes", "sneaker", "boot", "sandal", "loafer", "high_heel"]
-            let filteredResults = results.filter { clothingCategories.contains($0.identifier) && $0.confidence > 0.3 }
-            let sortedResults = filteredResults.sorted { $0.confidence > $1.confidence }
-            for result in sortedResults {
-                print("✅ Filtered: \(result.identifier) - Confidence: \(result.confidence)")
+            let sortedResults = results.sorted { $0.confidence > $1.confidence }
+            print("🔍 Top 5 Predictions:")
+            for (index, result) in sortedResults.prefix(5).enumerated() {
+                print("  \(index + 1). \(result.identifier) - Confidence: \(result.confidence)")
             }
 
-            if let topResult = sortedResults.first {
+            let clothingCategories = ["t-shirt", "pants", "trousers", "jeans", "shorts", "jacket", "sweater", "dress", "coat", "shoes", "sneaker", "boot", "sandal", "loafer", "high_heel"]
+            
+            let filteredResults = sortedResults.filter { clothingCategories.contains($0.identifier) && $0.confidence > 0.3 }
+
+            if let topResult = filteredResults.first {
                 let category = self.mapToClosetCategory(topResult.identifier)
                 completion(category)
-            } else {
-                completion("Unknown")
+                return
             }
+            
+            let top5Identifiers = sortedResults.prefix(5).map { $0.identifier.lowercased() }
+            let containsClothing = top5Identifiers.contains("clothing")
+            let hasOtherClothingItems = top5Identifiers.contains { clothingCategories.contains($0) }
+
+            if containsClothing && !hasOtherClothingItems {
+                // ❗ Only "clothing" detected → Ask user for the category
+                DispatchQueue.main.async {
+                    self.askUserForCategory { userCategory in
+                        completion(userCategory)
+                    }
+                }
+                return
+            }
+
+            completion("Unknown")
         }
 
         let handler = VNImageRequestHandler(ciImage: ciImage)
@@ -52,6 +70,27 @@ class ClothingClassifier {
         }
     }
 
+    private func askUserForCategory(completion: @escaping (String?) -> Void) {
+        let alertController = UIAlertController(title: "Unrecognized Clothing", message: "What type of clothing is this?", preferredStyle: .alert)
+
+        for category in ["Tops", "Bottoms", "Outerwear", "Dresses", "Footwear"] {
+            alertController.addAction(UIAlertAction(title: category, style: .default) { _ in
+                completion(category)
+            })
+        }
+
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            completion(nil)
+        })
+
+        DispatchQueue.main.async {
+            if let topController = UIApplication.shared.keyWindow?.rootViewController {
+                topController.present(alertController, animated: true)
+            }
+        }
+    }
+
+
 
     private func mapToClosetCategory(_ identifier: String) -> String {
         let mapping: [String: String] = [
@@ -63,6 +102,7 @@ class ClothingClassifier {
             "pants": "Bottoms",
             "jeans": "Bottoms",
             "shorts": "Bottoms",
+            "trousers":"Bottoms",
             "dress": "Dresses",
             "shoes": "Footwear",
             "sneaker": "Footwear",
