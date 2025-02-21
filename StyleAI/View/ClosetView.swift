@@ -14,7 +14,7 @@ struct ClosetView: View {
     @State private var closetImage: UIImage?
     @State private var isProcessing = false
     @State private var selectedImage: ClosetItemImage?
-    
+    @State private var showUnrecognizedAlert = false
     @State private var closetItems: [PhotosPickerItem] = []
     @State private var images: [ClosetItemImage] = []
 
@@ -76,6 +76,11 @@ struct ClosetView: View {
                 .onChange(of: closetItems) { newItems in
                     addNewClosetImages(from: newItems)
                 }
+                .alert("Item Not Recognized", isPresented: $showUnrecognizedAlert, actions: {
+                            Button("OK", role: .cancel) { }
+                        }, message: {
+                            Text("This item could not be classified as clothing and was not added to your closet.")
+                        })
                 .fullScreenCover(item: $selectedImage) { selectedImage in
                     FullScreenClosetImageView(originalImage: selectedImage.closetImage ?? UIImage(), onUpdate: { updatedImage in
                         updateClosetItem(with: selectedImage.id, newImage: updatedImage)
@@ -100,10 +105,13 @@ struct ClosetView: View {
 
                         ClothingClassifier.shared.classifyImage(uiImage) { category in
                             DispatchQueue.main.async {
-                                let closetItem = ClosetItemImage(id: UUID(), filename: filename, category: category ?? "Unknown")
-                                print(category ?? "Unknown")
-                                self.images.append(closetItem)
-                                saveClosetItems()
+                                if let category = category, category != "Unknown" {
+                                    let closetItem = ClosetItemImage(id: UUID(), filename: filename, category: category)
+                                    self.images.append(closetItem)
+                                    saveClosetItems()
+                                } else {
+                                    showUnrecognizedAlert = true
+                                }
                             }
                         }
                     }
