@@ -11,12 +11,11 @@ struct ClosetView: View {
     @State private var showCamera = false
     @State private var showPhotoPicker = false
     @State private var showingAlert = false
-    @State private var closetImage: UIImage?
-    @State private var isProcessing = false
     @State private var selectedImage: ClosetItemImage?
-    @State private var showUnrecognizedAlert = false
+    
     @State private var closetItems: [PhotosPickerItem] = []
     @State private var images: [ClosetItemImage] = []
+    @State private var showUnrecognizedAlert = false
 
     var body: some View {
         ZStack {
@@ -44,6 +43,13 @@ struct ClosetView: View {
                                     .shadow(radius: 5)
                                     .onTapGesture {
                                         selectedImage = image
+                                    }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            removeClosetItem(image)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
                                     }
                             }
                         }
@@ -76,11 +82,6 @@ struct ClosetView: View {
                 .onChange(of: closetItems) { newItems in
                     addNewClosetImages(from: newItems)
                 }
-                .alert("Item Not Recognized", isPresented: $showUnrecognizedAlert, actions: {
-                            Button("OK", role: .cancel) { }
-                        }, message: {
-                            Text("This item could not be classified as clothing and was not added to your closet.")
-                        })
                 .fullScreenCover(item: $selectedImage) { selectedImage in
                     FullScreenClosetImageView(originalImage: selectedImage.closetImage ?? UIImage(), onUpdate: { updatedImage in
                         updateClosetItem(with: selectedImage.id, newImage: updatedImage)
@@ -90,6 +91,21 @@ struct ClosetView: View {
         }
         .onAppear {
             loadClosetItems()
+        }
+        .alert("Item Not Recognized", isPresented: $showUnrecognizedAlert, actions: {
+            Button("OK", role: .cancel) { }
+        }, message: {
+            Text("This item could not be classified as clothing and was not added to your closet.")
+        })
+    }
+
+    // MARK: - Remove Closet Item
+    private func removeClosetItem(_ item: ClosetItemImage) {
+        if let index = images.firstIndex(where: { $0.id == item.id }) {
+
+            ImageStorage.deleteImage(named: images[index].filename)
+            images.remove(at: index)
+            saveClosetItems()
         }
     }
 
@@ -110,6 +126,7 @@ struct ClosetView: View {
                                     self.images.append(closetItem)
                                     saveClosetItems()
                                 } else {
+                                    // Show an alert if the item is unrecognized
                                     showUnrecognizedAlert = true
                                 }
                             }
@@ -121,7 +138,6 @@ struct ClosetView: View {
             }
         }
     }
-
 
     // MARK: - Update Image after Background Removal
     private func updateClosetItem(with id: UUID, newImage: UIImage) {
