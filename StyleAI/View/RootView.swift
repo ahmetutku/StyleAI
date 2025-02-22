@@ -18,7 +18,7 @@ struct RootView: View {
             if showIntro {
                 IntroScreen(showIntro: $showIntro)
             } else {
-                ContentView()
+                ClosetView()
             }
         }
     }
