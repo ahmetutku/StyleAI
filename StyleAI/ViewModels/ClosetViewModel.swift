@@ -65,4 +65,14 @@ class ClosetViewModel: ObservableObject {
             images = decoded
         }
     }
+    
+    func updateClosetItem(with id: UUID, newImage: UIImage) {
+        if let index = images.firstIndex(where: { $0.id == id }) {
+            let newFilename = "\(UUID().uuidString).png"
+            ImageStorage.saveImage(newImage, named: newFilename)
+            ImageStorage.deleteImage(named: images[index].filename)
+            images[index] = ClosetItemImage(id: id, filename: newFilename)
+            saveClosetItems()
+        }
+    }
 }
