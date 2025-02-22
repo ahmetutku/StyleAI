@@ -20,7 +20,6 @@ struct ClosetView: View {
                     DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
                         .padding(.top, -60.0)
                         .zIndex(2)
-                        .transition(.move(edge: .top))
                 }
                 VStack(spacing: 20) {
                     Text("My Closet")
