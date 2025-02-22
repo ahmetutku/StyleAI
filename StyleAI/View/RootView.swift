@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct RootView: View {
-    @State private var showIntro = true 
+    @State private var showIntro = true
+    @StateObject private var viewModel = ClosetViewModel()
 
     var body: some View {
         ZStack {
             Color("background_color").ignoresSafeArea()
             
-            if showIntro {
+            if (showIntro && viewModel.images.isEmpty) {
                 IntroScreen(showIntro: $showIntro)
             } else {
                 ClosetView()
