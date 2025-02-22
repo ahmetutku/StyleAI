@@ -12,15 +12,23 @@ struct ClosetView: View {
     @State private var showPhotoPicker = false
     @State private var showingAlert = false
     @State private var selectedImage: ClosetItemImage?
-    
+    @State private var menuPosition: CGPoint = .zero
+    @State private var isMenuOpen: Bool = false
     @State private var closetItems: [PhotosPickerItem] = []
     @State private var images: [ClosetItemImage] = []
     @State private var showUnrecognizedAlert = false
 
     var body: some View {
-        ZStack {
+        NavigationView{
+            ZStack {
             Color("background_color").ignoresSafeArea()
-            
+            if isMenuOpen {
+                DropdownMenuView(isMenuOpen: $isMenuOpen)
+                    .padding(.top, -60.0)
+                    .zIndex(2) // Make sure it's above everything
+                    .transition(.move(edge: .top))
+                
+            }
             VStack(spacing: 20) {
                 Text("My Closet")
                     .font(.largeTitle)
@@ -88,7 +96,10 @@ struct ClosetView: View {
                     })
                 }
             }
+            
         }
+        .navigationBarItems(leading: menuButton)
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             loadClosetItems()
         }
@@ -97,6 +108,26 @@ struct ClosetView: View {
         }, message: {
             Text("This item could not be classified as clothing and was not added to your closet.")
         })
+        }
+    }
+    
+    private var menuButton: some View {
+        GeometryReader { geometry in
+            Button(action: {
+                withAnimation {
+                    isMenuOpen.toggle()
+                    menuPosition = CGPoint(
+                        x: geometry.frame(in: .global).minX + 20,
+                        y: geometry.frame(in: .global).maxY + 10
+                    )
+                }
+            }) {
+                Image(systemName: "line.horizontal.3")
+                    .imageScale(.large)
+                    .foregroundColor(.accentColor)
+            }
+        }
+        .frame(width: 44, height: 44)
     }
 
     // MARK: - Remove Closet Item
@@ -170,3 +201,8 @@ struct ClosetView: View {
 }
 
 
+struct ClosetView_Previews: PreviewProvider {
+    static var previews: some View {
+        ClosetView()
+    }
+}
