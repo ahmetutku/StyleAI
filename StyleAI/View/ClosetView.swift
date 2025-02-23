@@ -7,6 +7,9 @@
 import SwiftUI
 import PhotosUI
 
+import SwiftUI
+import PhotosUI
+
 struct ClosetView: View {
     @StateObject private var viewModel = ClosetViewModel()
     @State private var selectedImage: ClosetItemImage?
@@ -16,45 +19,59 @@ struct ClosetView: View {
         NavigationView {
             ZStack {
                 Color("background_color").ignoresSafeArea()
-                if viewModel.isMenuOpen {
-                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
-                        .padding(.top, -60.0)
-                        .zIndex(2)
-                }
+
                 VStack(spacing: 20) {
                     Text("My Closet")
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.top)
                         .foregroundColor(.accentColor)
+
                     Spacer()
+
                     ScrollView {
-                        let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
-                        LazyVGrid(columns: columns, spacing: 10) {
-                            ForEach(viewModel.images) { image in
-                                if let uiImage = image.closetImage {
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(height: 100)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        .shadow(radius: 5)
-                                        .onTapGesture {
-                                            selectedImage = image
-                                        }
-                                        .contextMenu {
-                                            Button(role: .destructive) {
-                                                viewModel.removeClosetItem(image)
-                                            } label: {
-                                                Label("Delete", systemImage: "trash")
+                        VStack(alignment: .leading, spacing: 20) {
+                            ForEach(viewModel.categorizedCloset.keys.sorted(), id: \.self) { category in
+                                if let items = viewModel.categorizedCloset[category], !items.isEmpty {
+                                    VStack(alignment: .leading) {
+                                        Text(category)
+                                            .font(.title2)
+                                            .fontWeight(.bold)
+                                            .foregroundColor(.primary)
+                                            .padding(.leading)
+
+                                        let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
+                                        LazyVGrid(columns: columns, spacing: 10) {
+                                            ForEach(items) { item in
+                                                if let uiImage = item.closetImage {
+                                                    Image(uiImage: uiImage)
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .frame(height: 100)
+                                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                        .shadow(radius: 5)
+                                                        .onTapGesture {
+                                                            selectedImage = item
+                                                        }
+                                                        .contextMenu {
+                                                            Button(role: .destructive) {
+                                                                viewModel.removeClosetItem(item)
+                                                            } label: {
+                                                                Label("Delete", systemImage: "trash")
+                                                            }
+                                                        }
+                                                }
                                             }
                                         }
+                                        .padding(.horizontal)
+                                    }
                                 }
                             }
                         }
-                        .padding()
                     }
+
                     Spacer()
+
                     Button(action: {
                         viewModel.showPhotoPicker.toggle()
                     }) {
@@ -75,10 +92,8 @@ struct ClosetView: View {
                             viewModel.updateClosetItem(with: selectedImage.id, newImage: updatedImage)
                         })
                     }
-
                 }
             }
-            .navigationBarItems(leading: menuButton)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.loadClosetItems()
@@ -90,6 +105,7 @@ struct ClosetView: View {
             })
         }
     }
+
     
     private var menuButton: some View {
         GeometryReader { geometry in

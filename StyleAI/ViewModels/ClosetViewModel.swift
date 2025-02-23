@@ -16,9 +16,13 @@ class ClosetViewModel: ObservableObject {
     @Published var showCamera = false
     @Published var showUnrecognizedAlert = false
     @Published var isMenuOpen = false
+    var categorizedCloset: [String: [ClosetItemImage]] {
+        Dictionary(grouping: images, by: { $0.category })
+    }
+
     
     init() {
-            loadClosetItems() 
+            loadClosetItems()
         }
 
     func addNewClosetImages(from newItems: [PhotosPickerItem]) {
@@ -49,6 +53,7 @@ class ClosetViewModel: ObservableObject {
         }
     }
 
+
     func removeClosetItem(_ item: ClosetItemImage) {
         if let index = images.firstIndex(where: { $0.id == item.id }) {
             ImageStorage.deleteImage(named: images[index].filename)
@@ -75,7 +80,10 @@ class ClosetViewModel: ObservableObject {
             let newFilename = "\(UUID().uuidString).png"
             ImageStorage.saveImage(newImage, named: newFilename)
             ImageStorage.deleteImage(named: images[index].filename)
-            images[index] = ClosetItemImage(id: id, filename: newFilename)
+            
+            let category = images[index].category // Keep the original category
+            images[index] = ClosetItemImage(id: id, filename: newFilename, category: category)
+            
             saveClosetItems()
         }
     }
