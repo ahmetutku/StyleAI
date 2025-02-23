@@ -15,6 +15,8 @@ struct ClosetView: View {
     @State private var selectedImage: ClosetItemImage?
     @State private var menuPosition: CGPoint = .zero
     
+    
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -30,18 +32,16 @@ struct ClosetView: View {
                     Spacer()
 
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
-                            ForEach(viewModel.categorizedCloset.keys.sorted(), id: \.self) { category in
-                                if let items = viewModel.categorizedCloset[category], !items.isEmpty {
-                                    VStack(alignment: .leading) {
+                        VStack(spacing: 20) {
+                            ForEach(viewModel.orderedCategories, id: \.self) { category in
+                                if let items = viewModel.categorizedCloset[category] {
+                                    VStack(alignment: .leading, spacing: 10) {
                                         Text(category)
                                             .font(.title2)
                                             .fontWeight(.bold)
-                                            .foregroundColor(.primary)
-                                            .padding(.leading)
-
-                                        let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
-                                        LazyVGrid(columns: columns, spacing: 10) {
+                                            .foregroundColor(.accentColor)
+                                        
+                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 10)], spacing: 10) {
                                             ForEach(items) { item in
                                                 if let uiImage = item.closetImage {
                                                     Image(uiImage: uiImage)
@@ -63,12 +63,13 @@ struct ClosetView: View {
                                                 }
                                             }
                                         }
-                                        .padding(.horizontal)
                                     }
+                                    .padding(.horizontal)
                                 }
                             }
                         }
                     }
+
 
                     Spacer()
 

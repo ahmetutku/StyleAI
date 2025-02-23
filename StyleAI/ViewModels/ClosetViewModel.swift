@@ -16,8 +16,14 @@ class ClosetViewModel: ObservableObject {
     @Published var showCamera = false
     @Published var showUnrecognizedAlert = false
     @Published var isMenuOpen = false
+    
     var categorizedCloset: [String: [ClosetItemImage]] {
         Dictionary(grouping: images, by: { $0.category })
+    }
+    
+    var orderedCategories: [String] {
+        let categoryOrder = ["Tops", "Outerwear", "Bottoms", "Dresses", "Footwear"]
+        return categoryOrder.filter { categorizedCloset[$0] != nil }
     }
 
     
