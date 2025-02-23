@@ -16,6 +16,10 @@ class ClosetViewModel: ObservableObject {
     @Published var showCamera = false
     @Published var showUnrecognizedAlert = false
     @Published var isMenuOpen = false
+    
+    init() {
+            loadClosetItems() 
+        }
 
     func addNewClosetImages(from newItems: [PhotosPickerItem]) {
         for item in newItems {
