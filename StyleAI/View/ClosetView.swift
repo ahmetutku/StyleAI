@@ -7,9 +7,6 @@
 import SwiftUI
 import PhotosUI
 
-import SwiftUI
-import PhotosUI
-
 struct ClosetView: View {
     @StateObject private var viewModel = ClosetViewModel()
     @State private var selectedImage: ClosetItemImage?
