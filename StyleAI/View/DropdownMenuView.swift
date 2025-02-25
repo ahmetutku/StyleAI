@@ -35,7 +35,10 @@ struct DropdownMenuView: View {
                     NavigationLink(destination: ClosetView()) {
                         menuItem(icon: "star.fill", title: "My Closet")
                     }
-                    menuItem(icon: "flame", title: "Popular")
+                    NavigationLink(destination: FitView()) {
+                        menuItem(icon: "flame", title: "My Fits")
+                    }
+                    
                 }
                 .padding()
                 
