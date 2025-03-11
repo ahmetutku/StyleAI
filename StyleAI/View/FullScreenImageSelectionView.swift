@@ -1,3 +1,11 @@
+//
+//  FullScreenImageSelectionView.swift
+//  StyleAI
+//
+//  Created by Ahmet Hamamcioglu on 11.03.2025.
+//
+
+
 import SwiftUI
 
 struct FullScreenImageSelectionView: View {
