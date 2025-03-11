@@ -11,6 +11,9 @@ struct FitView: View {
     var body: some View {
         ZStack {
             Text("FitView!")
+            /**
+             I want to allow peopole to be able to add their outfots
+             */
         }
     }
 }
