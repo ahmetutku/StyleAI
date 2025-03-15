@@ -23,7 +23,6 @@ struct FullScreenImageSelectionView: View {
             Color("background_color").ignoresSafeArea()
 
             VStack {
-                // Category Selection Button
                 Button(action: { showCategoryDropdown.toggle() }) {
                     HStack {
                         Text(selectedCategory ?? "Select Category")
@@ -42,7 +41,6 @@ struct FullScreenImageSelectionView: View {
                     categoryDropdown
                 }
 
-                // Image Preview
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color.gray.opacity(0.2))
@@ -59,7 +57,6 @@ struct FullScreenImageSelectionView: View {
 
                 Spacer()
 
-                // Action Buttons
                 HStack {
                     Button(action: addToCloset) {
                         Text("Add to Closet")
@@ -112,9 +109,9 @@ struct FullScreenImageSelectionView: View {
     }
 
     private func addToCloset() {
-        guard let category = selectedCategory else { return } // Ensure category is selected
+        guard let category = selectedCategory else { return } 
 
-        let finalImage = processedImage ?? image // Use processed image if available, otherwise original
+        let finalImage = processedImage ?? image
         let filename = "\(UUID().uuidString).png"
         ImageStorage.saveImage(finalImage, named: filename)
 
