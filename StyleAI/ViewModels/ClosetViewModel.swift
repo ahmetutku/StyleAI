@@ -26,7 +26,7 @@ class ClosetViewModel: ObservableObject {
     }
     
     var orderedCategories: [String] {
-        let categoryOrder = ["Tops", "Outerwear", "Bottoms", "Dresses", "Footwear"]
+        let categoryOrder = ["Outerwear", "Tops", "Bottoms", "Dresses", "Footwear"]
         return categoryOrder.filter { categorizedCloset[$0] != nil }
     }
 
