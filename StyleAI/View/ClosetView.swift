@@ -31,7 +31,8 @@ struct ClosetView: View {
                     DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
                 }
             }
-            .navigationBarHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear { viewModel.loadClosetItems() }
             .fullScreenCover(isPresented: $viewModel.showFullScreenSelection) {
                 if let tempImage = viewModel.tempImage {
                     FullScreenImageSelectionView(viewModel: viewModel, image: tempImage)
@@ -53,7 +54,6 @@ struct ClosetView: View {
             .font(.largeTitle)
             .fontWeight(.bold)
             .foregroundColor(.accentColor)
-            .frame(maxHeight: .infinity, alignment: .top)
             .padding(.top, 10)
     }
 
