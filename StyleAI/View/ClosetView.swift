@@ -10,19 +10,28 @@ import PhotosUI
 struct ClosetView: View {
     @StateObject private var viewModel = ClosetViewModel()
     @State private var selectedImage: ClosetItemImage?
+    @State private var menuPosition: CGPoint = .zero
 
     var body: some View {
         NavigationView {
             ZStack {
                 Color("background_color").ignoresSafeArea()
+                
                 VStack(spacing: 20) {
                     headerView
                     closetScrollView
                     addPieceButton
                 }
+                .onAppear { viewModel.loadClosetItems() }
+
+                menuButton
+                    .position(x: 30, y: 45)
+
+                if viewModel.isMenuOpen {
+                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
+                }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear { viewModel.loadClosetItems() }
+            .navigationBarHidden(true)
             .fullScreenCover(isPresented: $viewModel.showFullScreenSelection) {
                 if let tempImage = viewModel.tempImage {
                     FullScreenImageSelectionView(viewModel: viewModel, image: tempImage)
@@ -43,8 +52,28 @@ struct ClosetView: View {
         Text("My Closet")
             .font(.largeTitle)
             .fontWeight(.bold)
-            .padding(.top)
             .foregroundColor(.accentColor)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.top, 10)
+    }
+
+    private var menuButton: some View {
+        GeometryReader { geometry in
+            Button(action: {
+                withAnimation {
+                    viewModel.isMenuOpen.toggle()
+                    menuPosition = CGPoint(
+                        x: geometry.frame(in: .global).minX + 20,
+                        y: geometry.frame(in: .global).maxY + 10
+                    )
+                }
+            }) {
+                Image(systemName: "line.horizontal.3")
+                    .imageScale(.large)
+                    .foregroundColor(.accentColor)
+            }
+        }
+        .frame(width: 44, height: 44)
     }
 
     private var closetScrollView: some View {
@@ -112,9 +141,10 @@ struct ClosetView: View {
     }
 }
 
-
 struct ClosetView_Previews: PreviewProvider {
     static var previews: some View {
         ClosetView()
     }
 }
+
+
