@@ -10,6 +10,8 @@ struct FitView: View {
     @StateObject private var viewModel = ClosetViewModel()
     @State private var selectedItems: [String: ClosetItemImage] = [:]
     @State private var selectedIndices: [String: Int] = [:]
+    @State private var menuPosition: CGPoint = .zero
+    @State private var isMenuOpen: Bool = false
 
     var body: some View {
         NavigationView {
@@ -21,16 +23,42 @@ struct FitView: View {
                         .fontWeight(.bold)
                         .padding(.top)
                         .foregroundColor(.accentColor)
-
+        
                     fitScrollView
-                    
                     addFitButton
+                    
+                }
+                menuButton
+                    .position(x: 30, y: 50)
+                
+                if isMenuOpen {
+                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
                 }
             }
             .onAppear { initializeSelections() }
             .navigationBarTitleDisplayMode(.inline)
+            
         }
     }
+    
+    private var menuButton: some View {
+            GeometryReader { geometry in
+                Button(action: {
+                    withAnimation {
+                        isMenuOpen.toggle()
+                        menuPosition = CGPoint(
+                            x: geometry.frame(in: .global).minX + 20,
+                            y: geometry.frame(in: .global).maxY + 10
+                        )
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .imageScale(.large)
+                        .foregroundColor(.accentColor)
+                }
+            }
+            .frame(width: 44, height: 44)
+        }
 
     private var fitScrollView: some View {
         ScrollView {
