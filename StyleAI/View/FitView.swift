@@ -19,12 +19,7 @@ struct FitView: View {
             ZStack {
                 Color("background_color").ignoresSafeArea()
                 VStack(spacing: 20) {
-                    Text("Create Your Fit")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.top)
-                        .foregroundColor(.accentColor)
-        
+                    headerView
                     fitScrollView
                     addFitButton
                     
@@ -38,6 +33,13 @@ struct FitView: View {
             .navigationBarTitleDisplayMode(.inline)
             
         }
+    }
+    private var headerView: some View{
+        Text("Create Your Fit")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundColor(.accentColor)
+            .padding(.top, 10)
     }
 
     private var fitScrollView: some View {
