@@ -11,6 +11,7 @@ struct ClosetView: View {
     @StateObject private var viewModel = ClosetViewModel()
     @State private var selectedImage: ClosetItemImage?
     @State private var menuPosition: CGPoint = .zero
+    @Binding var selectedTab: String
 
     var body: some View {
         NavigationView {
@@ -24,11 +25,11 @@ struct ClosetView: View {
                 }
                 .onAppear { viewModel.loadClosetItems() }
 
-                menuButton
-                    .position(x: 30, y: 45)
+//                menuButton
+//                    .position(x: 30, y: 45)
 
                 if viewModel.isMenuOpen {
-                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
+                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen, selectedTab: $selectedTab)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -143,7 +144,7 @@ struct ClosetView: View {
 
 struct ClosetView_Previews: PreviewProvider {
     static var previews: some View {
-        ClosetView()
+        ClosetView(selectedTab: .constant("Closet"))
     }
 }
 

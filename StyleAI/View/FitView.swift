@@ -12,6 +12,7 @@ struct FitView: View {
     @State private var selectedIndices: [String: Int] = [:]
     @State private var menuPosition: CGPoint = .zero
     @State private var isMenuOpen: Bool = false
+    @Binding var selectedTab: String
 
     var body: some View {
         NavigationView {
@@ -28,11 +29,9 @@ struct FitView: View {
                     addFitButton
                     
                 }
-                menuButton
-                    .position(x: 30, y: 50)
                 
                 if isMenuOpen {
-                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen)
+                    DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen, selectedTab: $selectedTab)
                 }
             }
             .onAppear { initializeSelections() }
@@ -146,7 +145,7 @@ struct FitView: View {
 
 struct FitView_Previews: PreviewProvider {
     static var previews: some View {
-        FitView()
+        FitView(selectedTab: .constant("Fit"))
     }
 }
 

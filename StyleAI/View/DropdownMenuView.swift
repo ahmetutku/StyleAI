@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+
 struct DropdownMenuView: View {
     @Binding var isMenuOpen: Bool
+    @Binding var selectedTab: String
 
     var body: some View {
         ZStack {
@@ -29,35 +31,31 @@ struct DropdownMenuView: View {
                 .padding(.top)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    NavigationLink(destination: InspoView()) {
-                        menuItem(icon: "magnifyingglass", title: "Inspo")
-                    }
-                    NavigationLink(destination: ClosetView()) {
-                        menuItem(icon: "star.fill", title: "My Closet")
-                    }
-                    NavigationLink(destination: FitView()) {
-                        menuItem(icon: "flame", title: "My Fits")
-                    }
-                    
+                    menuItem(icon: "magnifyingglass", title: "Inspo", tab: "Inspo")
+                    menuItem(icon: "star.fill", title: "My Closet", tab: "Closet")
+                    menuItem(icon: "flame", title: "My Fits", tab: "Fit")
                 }
                 .padding()
-                
                 .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color("background_color")))
                 .padding()
-                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
     }
 
-    private func menuItem(icon: String, title: String) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.accentColor)
-            Text(title)
-                .foregroundColor(.accentColor)
+    private func menuItem(icon: String, title: String, tab: String) -> some View {
+        Button(action: {
+            selectedTab = tab
+            isMenuOpen = false
+        }) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(.accentColor)
+                Text(title)
+                    .foregroundColor(.accentColor)
+            }
+            .padding(.vertical, 5)
         }
-        .padding(.vertical, 5)
-        
     }
 }
+
