@@ -7,11 +7,7 @@
 import SwiftUI
 
 struct FitView: View {
-    @StateObject private var viewModel = ClosetViewModel()
-    @State private var selectedItems: [String: ClosetItemImage] = [:]
-    @State private var selectedIndices: [String: Int] = [:]
-    @State private var menuPosition: CGPoint = .zero
-    @State private var isMenuOpen: Bool = false
+    @StateObject private var viewModel = FitViewModel()
     @Binding var selectedTab: String
 
     var body: some View {
@@ -22,19 +18,17 @@ struct FitView: View {
                     headerView
                     fitScrollView
                     addFitButton
-                    
                 }
-                
-                if isMenuOpen {
+
+                if viewModel.isMenuOpen {
                     DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen, selectedTab: $selectedTab)
                 }
             }
-            .onAppear { initializeSelections() }
             .navigationBarTitleDisplayMode(.inline)
-            
         }
     }
-    private var headerView: some View{
+
+    private var headerView: some View {
         Text("Create Your Fit")
             .font(.largeTitle)
             .fontWeight(.bold)
@@ -62,7 +56,7 @@ struct FitView: View {
                 .foregroundColor(.accentColor)
 
             HStack {
-                Button(action: { navigateItems(for: category, direction: -1, items: items) }) {
+                Button(action: { viewModel.navigateItems(for: category, direction: -1) }) {
                     Image(systemName: "chevron.left")
                         .font(.title)
                         .foregroundColor(.accentColor)
@@ -70,16 +64,15 @@ struct FitView: View {
                 }
                 .disabled(items.count <= 1)
 
-                if let selectedIndex = selectedIndices[category], items.indices.contains(selectedIndex) {
+                if let selectedIndex = viewModel.selectedIndices[category], items.indices.contains(selectedIndex) {
                     Image(uiImage: items[selectedIndex].closetImage ?? UIImage())
                         .resizable()
                         .scaledToFill()
                         .frame(width: 120, height: 120)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-
                 }
 
-                Button(action: { navigateItems(for: category, direction: 1, items: items) }) {
+                Button(action: { viewModel.navigateItems(for: category, direction: 1) }) {
                     Image(systemName: "chevron.right")
                         .font(.title)
                         .foregroundColor(.accentColor)
@@ -92,7 +85,7 @@ struct FitView: View {
     }
 
     private var addFitButton: some View {
-        Button(action: saveFit) {
+        Button(action: viewModel.saveFit) {
             Text("Add Fit")
                 .padding()
                 .font(.title2)
@@ -101,28 +94,6 @@ struct FitView: View {
                 .foregroundColor(.white)
                 .cornerRadius(10)
         }
-    }
-
-    private func initializeSelections() {
-        for category in viewModel.orderedCategories {
-            if let firstItem = viewModel.categorizedCloset[category]?.first {
-                selectedItems[category] = firstItem
-                selectedIndices[category] = 0
-            }
-        }
-    }
-
-    private func navigateItems(for category: String, direction: Int, items: [ClosetItemImage]) {
-        if let currentIndex = selectedIndices[category] {
-            let newIndex = (currentIndex + direction + items.count) % items.count
-            selectedIndices[category] = newIndex
-            selectedItems[category] = items[newIndex]
-        }
-    }
-
-    private func saveFit() {
-        let outfit = selectedItems.mapValues { $0.filename }
-        UserDefaults.standard.set(outfit, forKey: "savedFit")
     }
 }
 
