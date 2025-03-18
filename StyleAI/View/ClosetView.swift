@@ -25,9 +25,6 @@ struct ClosetView: View {
                 }
                 .onAppear { viewModel.loadClosetItems() }
 
-//                menuButton
-//                    .position(x: 30, y: 45)
-
                 if viewModel.isMenuOpen {
                     DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen, selectedTab: $selectedTab)
                 }
@@ -56,25 +53,6 @@ struct ClosetView: View {
             .fontWeight(.bold)
             .foregroundColor(.accentColor)
             .padding(.top, 10)
-    }
-
-    private var menuButton: some View {
-        GeometryReader { geometry in
-            Button(action: {
-                withAnimation {
-                    viewModel.isMenuOpen.toggle()
-                    menuPosition = CGPoint(
-                        x: geometry.frame(in: .global).minX + 20,
-                        y: geometry.frame(in: .global).maxY + 10
-                    )
-                }
-            }) {
-                Image(systemName: "line.horizontal.3")
-                    .imageScale(.large)
-                    .foregroundColor(.accentColor)
-            }
-        }
-        .frame(width: 44, height: 44)
     }
 
     private var closetScrollView: some View {

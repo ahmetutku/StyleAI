@@ -27,7 +27,7 @@ struct MainView: View {
             }
 
             menuButton
-                .position(x: 30, y: 50)
+                .position(x: 30, y: 35)
                 .zIndex(1)
 
             if isMenuOpen {

@@ -39,25 +39,6 @@ struct FitView: View {
             
         }
     }
-    
-    private var menuButton: some View {
-            GeometryReader { geometry in
-                Button(action: {
-                    withAnimation {
-                        isMenuOpen.toggle()
-                        menuPosition = CGPoint(
-                            x: geometry.frame(in: .global).minX + 20,
-                            y: geometry.frame(in: .global).maxY + 10
-                        )
-                    }
-                }) {
-                    Image(systemName: "line.horizontal.3")
-                        .imageScale(.large)
-                        .foregroundColor(.accentColor)
-                }
-            }
-            .frame(width: 44, height: 44)
-        }
 
     private var fitScrollView: some View {
         ScrollView {
