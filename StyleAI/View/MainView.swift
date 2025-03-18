@@ -8,37 +8,40 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var selectedTab = "Closet"
-    @State private var isMenuOpen = false
+    @State private var selectedTab: String = "Closet"
+    @State private var isMenuOpen: Bool = false
 
     var body: some View {
         ZStack {
             Color("background_color").ignoresSafeArea()
 
-            TabView(selection: $selectedTab) {
+            switch selectedTab {
+            case "Closet":
                 ClosetView(selectedTab: $selectedTab)
-                    .tag("Closet")
+            case "Fit":
                 FitView(selectedTab: $selectedTab)
-                    .tag("Fit")
-                InspoView(selectedTab: $selectedTab)
-                    .tag("Inspo")
+            case "Inspo":
+                InspoView()
+            default:
+                ClosetView(selectedTab: $selectedTab)
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Optional styling
 
             menuButton
-                .position(x: 30, y: 45)
-                .zIndex(2)
+                .position(x: 30, y: 50)
+                .zIndex(1)
 
             if isMenuOpen {
                 DropdownMenuView(isMenuOpen: $isMenuOpen, selectedTab: $selectedTab)
-                    .position(x: 100, y: 100)
-                    .zIndex(1)
             }
         }
     }
 
     private var menuButton: some View {
-        Button(action: { withAnimation { isMenuOpen.toggle() } }) {
+        Button(action: {
+            withAnimation {
+                isMenuOpen.toggle()
+            }
+        }) {
             Image(systemName: "line.horizontal.3")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)

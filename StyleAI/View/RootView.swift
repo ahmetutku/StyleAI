@@ -19,7 +19,7 @@ struct RootView: View {
             if (showIntro && viewModel.images.isEmpty) {
                 IntroScreen(showIntro: $showIntro)
             } else {
-                ClosetView()
+                MainView()
             }
         }
     }
