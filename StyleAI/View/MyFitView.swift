@@ -11,7 +11,8 @@ struct MyFitsView: View {
     @Binding var selectedTab: String
     @State private var savedFits: [[String: String]] = []
     let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
-
+    private let categoryOrder: [String] = ["Outerwear", "Tops", "Bottoms", "Footwear"]
+    
     var body: some View {
         NavigationView {
             ZStack{
@@ -43,7 +44,8 @@ struct MyFitsView: View {
                         .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         VStack {
-                            ForEach(Array(savedFits[index].values), id: \ .self) { filename in
+                            let sortedFit = sortedFitItems(savedFits[index])
+                            ForEach(sortedFit, id: \ .self) { filename in
                                 Image(uiImage: loadImage(filename: filename))
                                     .resizable()
                                     .scaledToFill()
@@ -60,6 +62,13 @@ struct MyFitsView: View {
     private func loadSavedFits() {
         savedFits = UserDefaults.standard.array(forKey: "savedFits") as? [[String: String]] ?? []
     }
+    
+    private func sortedFitItems(_ fit: [String: String]) -> [String] {
+            categoryOrder.compactMap { category in
+                fit[category] // Extract filenames in order, ignoring missing categories
+            }
+        }
+
 
     private func loadImage(filename: String) -> UIImage {
         let fileManager = FileManager.default
