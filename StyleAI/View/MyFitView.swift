@@ -10,6 +10,7 @@ import SwiftUI
 struct MyFitsView: View {
     @Binding var selectedTab: String
     @State private var savedFits: [[String: String]] = []
+    let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
 
     var body: some View {
         NavigationView {
@@ -17,7 +18,9 @@ struct MyFitsView: View {
                 Color("background_color").ignoresSafeArea()
                 VStack{
                     headerView
-                    savedFitsView
+                    ScrollView {
+                        savedFitsView
+                    }
                     Spacer()
                 }
             }
@@ -33,13 +36,13 @@ struct MyFitsView: View {
     }
     
     private var savedFitsView: some View {
-        VStack {
+        LazyVGrid(columns: columns) {
             ForEach(savedFits.indices, id: \ .self) { index in
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     Text("Fit \(index + 1)")
                         .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
+                        VStack {
                             ForEach(Array(savedFits[index].values), id: \ .self) { filename in
                                 Image(uiImage: loadImage(filename: filename))
                                     .resizable()
@@ -50,7 +53,7 @@ struct MyFitsView: View {
                         }
                     }
                 }
-                .padding(.vertical, 5)
+                .padding(.all, 10.0)
             }
         }
     }
