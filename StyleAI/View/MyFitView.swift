@@ -13,31 +13,46 @@ struct MyFitsView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(savedFits.indices, id: \ .self) { index in
-                    VStack(alignment: .leading) {
-                        Text("Fit \(index + 1)")
-                            .font(.headline)
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(Array(savedFits[index].values), id: \ .self) { filename in
-                                    Image(uiImage: loadImage(filename: filename))
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 100, height: 100)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                }
-                            }
-                        }
-                    }
-                    .padding(.vertical, 5)
+            ZStack{
+                Color("background_color").ignoresSafeArea()
+                VStack{
+                    headerView
+                    savedFitsView
                 }
             }
-            .navigationTitle("My Fits")
             .onAppear(perform: loadSavedFits)
         }
     }
-
+    private var headerView: some View {
+        Text("My Fits")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundColor(.accentColor)
+            .padding(.top, 10)
+    }
+    
+    private var savedFitsView: some View {
+        List {
+            ForEach(savedFits.indices, id: \ .self) { index in
+                VStack(alignment: .leading) {
+                    Text("Fit \(index + 1)")
+                        .font(.headline)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(Array(savedFits[index].values), id: \ .self) { filename in
+                                Image(uiImage: loadImage(filename: filename))
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 5)
+            }
+        }
+    }
     private func loadSavedFits() {
         savedFits = UserDefaults.standard.array(forKey: "savedFits") as? [[String: String]] ?? []
     }
