@@ -18,6 +18,7 @@ struct MyFitsView: View {
                 VStack{
                     headerView
                     savedFitsView
+                    Spacer()
                 }
             }
             .onAppear(perform: loadSavedFits)
@@ -32,7 +33,7 @@ struct MyFitsView: View {
     }
     
     private var savedFitsView: some View {
-        List {
+        VStack {
             ForEach(savedFits.indices, id: \ .self) { index in
                 VStack(alignment: .leading) {
                     Text("Fit \(index + 1)")
