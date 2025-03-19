@@ -20,8 +20,8 @@ struct MainView: View {
                 ClosetView(selectedTab: $selectedTab)
             case "Fit":
                 FitView(selectedTab: $selectedTab)
-            case "Inspo":
-                InspoView()
+            case "MyFits":
+                MyFitsView(selectedTab: $selectedTab)
             default:
                 ClosetView(selectedTab: $selectedTab)
             }

@@ -31,9 +31,9 @@ struct DropdownMenuView: View {
                 .padding(.top)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    menuItem(icon: "magnifyingglass", title: "Inspo", tab: "Inspo")
                     menuItem(icon: "star.fill", title: "My Closet", tab: "Closet")
-                    menuItem(icon: "flame", title: "My Fits", tab: "Fit")
+                    menuItem(icon: "magnifyingglass", title: "Create a Fit", tab: "Fit")
+                    menuItem(icon: "flame", title: "My Fits", tab: "MyFits")
                 }
                 .padding()
                 .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color("background_color")))
