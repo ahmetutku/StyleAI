@@ -45,6 +45,10 @@ class FitViewModel: ObservableObject {
 
     func saveFit() {
         let outfit = selectedItems.mapValues { $0.filename }
-        UserDefaults.standard.set(outfit, forKey: "savedFit")
+        
+        var savedFits = UserDefaults.standard.array(forKey: "savedFits") as? [[String: String]] ?? []
+        savedFits.append(outfit)
+        UserDefaults.standard.set(savedFits, forKey: "savedFits")
     }
 }
+
