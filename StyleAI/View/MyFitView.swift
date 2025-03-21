@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MyFitsView: View {
+    @StateObject private var viewModel = MyFitViewModel()
     @Binding var selectedTab: String
-    @State private var savedFits: [[String: String]] = []
     let columns = [GridItem(.adaptive(minimum: 120), spacing: 10)]
     private let categoryOrder: [String] = ["Outerwear", "Tops", "Bottoms", "Footwear"]
     
@@ -25,7 +25,9 @@ struct MyFitsView: View {
                     Spacer()
                 }
             }
-            .onAppear(perform: loadSavedFits)
+            .onAppear{
+                viewModel.loadSavedFits()
+            }
         }
     }
     private var headerView: some View {
@@ -38,15 +40,15 @@ struct MyFitsView: View {
     
     private var savedFitsView: some View {
         LazyVGrid(columns: columns) {
-            ForEach(savedFits.indices, id: \ .self) { index in
+            ForEach(viewModel.savedFits.indices, id: \ .self) { index in
                 VStack(alignment: .center) {
                     Text("Fit \(index + 1)")
                         .font(.headline)
                     ScrollView(.horizontal, showsIndicators: false) {
                         VStack {
-                            let sortedFit = sortedFitItems(savedFits[index])
+                            let sortedFit = viewModel.sortedFitItems(viewModel.savedFits[index])
                             ForEach(sortedFit, id: \ .self) { filename in
-                                Image(uiImage: loadImage(filename: filename))
+                                Image(uiImage: viewModel.loadImage(filename: filename))
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 100, height: 100)
@@ -55,31 +57,14 @@ struct MyFitsView: View {
                         }
                     }
                 }
+                .contextMenu {
+                 Button(role: .destructive) {} label: {
+                  Label("Delete", systemImage: "trash")
+                  }
+                }
                 .padding(.all, 10.0)
             }
         }
-    }
-    private func loadSavedFits() {
-        savedFits = UserDefaults.standard.array(forKey: "savedFits") as? [[String: String]] ?? []
-    }
-    
-    private func sortedFitItems(_ fit: [String: String]) -> [String] {
-            categoryOrder.compactMap { category in
-                fit[category] // Extract filenames in order, ignoring missing categories
-            }
-        }
-
-
-    private func loadImage(filename: String) -> UIImage {
-        let fileManager = FileManager.default
-        let paths = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-        if let documentDirectory = paths.first {
-            let fileURL = documentDirectory.appendingPathComponent(filename)
-            if let imageData = try? Data(contentsOf: fileURL), let image = UIImage(data: imageData) {
-                return image
-            }
-        }
-        return UIImage(systemName: "photo") ?? UIImage()
     }
 }
 
