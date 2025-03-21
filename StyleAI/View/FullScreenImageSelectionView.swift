@@ -83,6 +83,8 @@ struct FullScreenImageSelectionView: View {
                 }
                 .padding()
             }
+        }.onAppear(){
+            removeBackground()
         }
     }
 
