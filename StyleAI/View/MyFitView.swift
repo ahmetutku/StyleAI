@@ -58,7 +58,9 @@ struct MyFitsView: View {
                     }
                 }
                 .contextMenu {
-                 Button(role: .destructive) {} label: {
+                 Button(role: .destructive) {
+                     viewModel.deleteFit(at: index)
+                 } label: {
                   Label("Delete", systemImage: "trash")
                   }
                 }

@@ -24,6 +24,12 @@ class MyFitViewModel: ObservableObject {
                 fit[category]
             }
     }
+    
+    func deleteFit(at index: Int) {
+        guard index < savedFits.count else { return }
+        savedFits.remove(at: index)
+        UserDefaults.standard.set(savedFits, forKey: "savedFits")
+    }
 
 
     func loadImage(filename: String) -> UIImage {
