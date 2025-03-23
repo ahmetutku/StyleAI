@@ -16,13 +16,17 @@ class ClosetViewModel: ObservableObject {
     @Published var showCamera = false
     @Published var showUnrecognizedAlert = false
     @Published var isMenuOpen = false
+    @Published var tempImage: UIImage?
+    @Published var selectedCategory: String = "Shirts"
+    @Published var showFullScreenSelection = false
+
     
     var categorizedCloset: [String: [ClosetItemImage]] {
         Dictionary(grouping: images, by: { $0.category })
     }
     
     var orderedCategories: [String] {
-        let categoryOrder = ["Tops", "Outerwear", "Bottoms", "Dresses", "Footwear"]
+        let categoryOrder = ["Outerwear", "Tops", "Bottoms", "Dresses", "Footwear"]
         return categoryOrder.filter { categorizedCloset[$0] != nil }
     }
 
@@ -34,30 +38,21 @@ class ClosetViewModel: ObservableObject {
     func addNewClosetImages(from newItems: [PhotosPickerItem]) {
         for item in newItems {
             item.loadTransferable(type: Data.self) { result in
-                switch result {
-                case .success(let imageData):
-                    if let imageData, let uiImage = UIImage(data: imageData) {
-                        let filename = "\(UUID().uuidString).png"
-                        ImageStorage.saveImage(uiImage, named: filename)
-
-                        ClothingClassifier.shared.classifyImage(uiImage) { category in
-                            DispatchQueue.main.async {
-                                if let category = category, category != "Unknown" {
-                                    let closetItem = ClosetItemImage(id: UUID(), filename: filename, category: category)
-                                    self.images.append(closetItem)
-                                    self.saveClosetItems()
-                                } else {
-                                    self.showUnrecognizedAlert = true
-                                }
-                            }
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let imageData):
+                        if let imageData, let uiImage = UIImage(data: imageData) {
+                            self.tempImage = uiImage
+                            self.showFullScreenSelection = true
                         }
+                    case .failure(let error):
+                        print("Error loading image: \(error)")
                     }
-                case .failure(let error):
-                    print("Error loading image: \(error)")
                 }
             }
         }
     }
+
 
 
     func removeClosetItem(_ item: ClosetItemImage) {
