@@ -19,6 +19,7 @@ struct FitView: View {
                     fitScrollView
                     addFitButton
                 }
+                //add layering options
 
                 if viewModel.isMenuOpen {
                     DropdownMenuView(isMenuOpen: $viewModel.isMenuOpen, selectedTab: $selectedTab)
